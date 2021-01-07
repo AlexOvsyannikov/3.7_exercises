@@ -29,6 +29,10 @@ public class GameView extends View{
     private final int timerInterval = 30;
 
     private boolean stoped = false;
+    private boolean won = false;
+    public boolean paused = false;
+    public boolean resumed = false;
+
     public GameView(Context context) {
         super(context);
         lvl=0;
@@ -130,6 +134,16 @@ public class GameView extends View{
             p.setTextSize(100.0f);
             canvas.drawText("GAME OVER.", getWidth()/4, getHeight()/2, p);
         }
+
+        if (won==true){
+            p.setTextSize(100.0f);
+            canvas.drawText("YOU WIN!", getWidth()/4, getHeight()/2, p);
+        }
+        if (paused==true){
+            p.setTextSize(100.0f);
+            canvas.drawText("PAUSE", getWidth()/4, getHeight()/2, p);
+        }
+
     }
 
     protected void update () {
@@ -176,13 +190,27 @@ public class GameView extends View{
         }
         if(points<=-30){
             stopGame();
+            stoped=true;
+        }
+        if(lvl>=20) {
+            stopGame();
+            won = true;
+        }
+        if (paused==true){
+            resumed=false;
+            pauseGame();
         }
 
+        if(resumed==true){
+            setLvl();
+            resumed=false;
+        }
 
 
 
         invalidate();
     }
+
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -191,11 +219,11 @@ public class GameView extends View{
         if (eventAction == MotionEvent.ACTION_DOWN)  {
 
             if (event.getY() < playerBird.getBoundingBoxRect().top) {
-                playerBird.setVy(-100);
+                playerBird.setVy(-100-(15*lvl));
                 points--;
             }
             else if (event.getY() > (playerBird.getBoundingBoxRect().bottom)) {
-                playerBird.setVy(100);
+                playerBird.setVy(100+(15*lvl));
                 points--;
             }
         }
@@ -218,13 +246,20 @@ public class GameView extends View{
         enemyBird.setX(viewHeight+10000);
         bonus.setX(viewHeight+10000);
         playerBird.setX(viewHeight+10000);
-        stoped=true;
-
     }
+
+    private void pauseGame(){
+        enemyBird.setVx(0);
+        bonus.setVx(0);
+        playerBird.setVy(0);
+    }
+
+
     private void teleportEnemy (Sprite sprite) {
         sprite.setX(viewWidth + Math.random() * 500);
         sprite.setY(Math.random() * (viewHeight - enemyBird.getFrameHeight()));
     }
+
 
     class Timer extends CountDownTimer {
 

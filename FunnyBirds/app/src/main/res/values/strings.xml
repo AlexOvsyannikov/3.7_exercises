@@ -2,5 +2,6 @@
     <string name="app_name">Забавные птички</string>
 
     <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">Pause</string>
+    <string name="resume">Resume</string>
 </resources>

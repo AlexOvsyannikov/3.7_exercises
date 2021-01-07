@@ -6,12 +6,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity {
-
+    GameView GV;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_main);
-        setContentView(new GameView(this));
+        GV = new GameView(this);
+        setContentView(GV);
 
     }
 
@@ -30,9 +31,16 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.pause) {
+            GV.paused = true;
             return true;
         }
+        else if (id == R.id.resume){
+            GV.paused=false;
+            GV.resumed=true;
+            return true;
+        }
+
 
         return super.onOptionsItemSelected(item);
     }
