@@ -141,15 +141,18 @@ public class GameView extends View{
         }
         if (paused==true){
             p.setTextSize(100.0f);
-            canvas.drawText("PAUSE", getWidth()/4, getHeight()/2, p);
+            canvas.drawText("PAUSE", getWidth()/2, getHeight()/2, p);
         }
 
     }
 
     protected void update () {
-        playerBird.update(timerInterval);
-        enemyBird.update(timerInterval);
-        bonus.update(timerInterval);
+
+        if (paused==false) {
+            playerBird.update(timerInterval);
+            enemyBird.update(timerInterval);
+            bonus.update(timerInterval);
+        }
 
         if (playerBird.getY() + playerBird.getFrameHeight() > viewHeight) {
             playerBird.setY(viewHeight - playerBird.getFrameHeight());
@@ -216,7 +219,7 @@ public class GameView extends View{
     public boolean onTouchEvent(MotionEvent event) {
 
         int eventAction = event.getAction();
-        if (eventAction == MotionEvent.ACTION_DOWN)  {
+        if (eventAction == MotionEvent.ACTION_DOWN && paused == false)  {
 
             if (event.getY() < playerBird.getBoundingBoxRect().top) {
                 playerBird.setVy(-100-(15*lvl));
