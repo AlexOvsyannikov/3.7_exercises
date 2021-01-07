@@ -20,7 +20,7 @@ public class GameView extends View{
     private Sprite enemyBoom;
     private Sprite bonus;
 
-
+    private int lvl;
     private int viewWidth;
     private int viewHeight;
 
@@ -30,6 +30,8 @@ public class GameView extends View{
 
     public GameView(Context context) {
         super(context);
+        lvl=0;
+
 
         Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.player);
         int w = b.getWidth()/5;
@@ -121,6 +123,7 @@ public class GameView extends View{
         p.setTextSize(55.0f);
         p.setColor(Color.WHITE);
         canvas.drawText(points + "", viewWidth - 200, 70, p);
+        canvas.drawText(lvl + "", viewWidth - 400, 70, p);
     }
 
     protected void update () {
@@ -141,7 +144,7 @@ public class GameView extends View{
 
         if (enemyBird.getX() < - enemyBird.getFrameWidth()) {
             teleportEnemy(enemyBird);
-            points +=10;
+            points +=5;
         }
 
         if (enemyBird.intersect(playerBird)) {
@@ -155,8 +158,17 @@ public class GameView extends View{
 
         if (bonus.intersect(playerBird)) {
             teleportEnemy (bonus);
-            points += 20;
+            points += 25;
         }
+
+        if(points>=30){
+            teleportEnemy(enemyBird);
+            teleportEnemy(bonus);
+            lvl+=1;
+            setLvl();
+            points=0;
+        }
+
 
 
 
@@ -183,7 +195,11 @@ public class GameView extends View{
         return true;
     }
 
-
+    private void setLvl(){
+        enemyBird.setVx(-300-lvl*100);
+        bonus.setVx(-300-lvl*100);
+        playerBird.setVy(100+lvl*15);
+    }
     private void teleportEnemy (Sprite sprite) {
         sprite.setX(viewWidth + Math.random() * 500);
         sprite.setY(Math.random() * (viewHeight - enemyBird.getFrameHeight()));
