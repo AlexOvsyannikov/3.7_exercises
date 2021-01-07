@@ -28,6 +28,7 @@ public class GameView extends View{
 
     private final int timerInterval = 30;
 
+    private boolean stoped = false;
     public GameView(Context context) {
         super(context);
         lvl=0;
@@ -124,6 +125,11 @@ public class GameView extends View{
         p.setColor(Color.WHITE);
         canvas.drawText(points + "", viewWidth - 200, 70, p);
         canvas.drawText(lvl + "", viewWidth - 400, 70, p);
+
+        if (stoped==true){
+            p.setTextSize(100.0f);
+            canvas.drawText("GAME OVER.", getWidth()/4, getHeight()/2, p);
+        }
     }
 
     protected void update () {
@@ -149,7 +155,7 @@ public class GameView extends View{
 
         if (enemyBird.intersect(playerBird)) {
             teleportEnemy (enemyBird);
-            points -= 40;
+            points -= 15;
         }
 
         if (bonus.getX() < - bonus.getFrameWidth()) {
@@ -168,7 +174,9 @@ public class GameView extends View{
             setLvl();
             points=0;
         }
-
+        if(points<=-30){
+            stopGame();
+        }
 
 
 
@@ -199,6 +207,19 @@ public class GameView extends View{
         enemyBird.setVx(-300-lvl*100);
         bonus.setVx(-300-lvl*100);
         playerBird.setVy(100+lvl*15);
+    }
+
+    private void stopGame(){
+        enemyBird.setVx(0);
+        bonus.setVx(0);
+        points=0;
+        lvl=0;
+        playerBird.setVx(0);
+        enemyBird.setX(viewHeight+10000);
+        bonus.setX(viewHeight+10000);
+        playerBird.setX(viewHeight+10000);
+        stoped=true;
+
     }
     private void teleportEnemy (Sprite sprite) {
         sprite.setX(viewWidth + Math.random() * 500);
