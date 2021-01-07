@@ -263,6 +263,13 @@ public class GameView extends View{
                 playerBird.setVy(100+(15*lvl));
                 points--;
             }
+
+
+            if ((event.getY()>boom.getBoundingBoxRect().top&&event.getY()<boom.getBoundingBoxRect().bottom)&&(event.getX()>boom.getBoundingBoxRect().left&&event.getX()<boom.getBoundingBoxRect().right)){
+                teleportEnemy(boom);
+                points+=3;
+            }
+
         }
 
         return true;
