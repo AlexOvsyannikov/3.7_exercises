@@ -17,7 +17,7 @@ public class GameView extends View{
 
     private Sprite playerBird;
     private Sprite enemyBird;
-    private Sprite enemyBoom;
+    private Sprite boom;
     private Sprite bonus;
 
     private int lvl;
@@ -100,6 +100,28 @@ public class GameView extends View{
             }
         }
 
+        b = BitmapFactory.decodeResource(getResources(), R.drawable.boom);
+        w = b.getWidth()/5;
+        h = b.getHeight()/3;
+        firstFrame = new Rect(4*w, 0, 5*w, h);
+
+        boom = new Sprite(2000, 250, -300, 0, firstFrame, b);
+
+        for (int i = 0; i < 3; i++) {
+            for (int j = 4; j >= 0; j--) {
+
+                if (i ==0 && j == 4) {
+                    continue;
+                }
+
+                if (i ==2 && j == 0) {
+                    continue;
+                }
+
+                boom.addFrame(new Rect(j*w, i*h, j*w+w, i*w+w));
+            }
+        }
+
 
 
         Timer t = new Timer();
@@ -122,6 +144,7 @@ public class GameView extends View{
         playerBird.draw(canvas);
         enemyBird.draw(canvas);
         bonus.draw(canvas);
+        boom.draw(canvas);
 
         Paint p = new Paint();
         p.setAntiAlias(true);
@@ -152,6 +175,7 @@ public class GameView extends View{
             playerBird.update(timerInterval);
             enemyBird.update(timerInterval);
             bonus.update(timerInterval);
+            boom.update(timerInterval);
         }
 
         if (playerBird.getY() + playerBird.getFrameHeight() > viewHeight) {
@@ -172,7 +196,7 @@ public class GameView extends View{
 
         if (enemyBird.intersect(playerBird)) {
             teleportEnemy (enemyBird);
-            points -= 15;
+            points -= 10;
         }
 
         if (bonus.getX() < - bonus.getFrameWidth()) {
@@ -182,6 +206,16 @@ public class GameView extends View{
         if (bonus.intersect(playerBird)) {
             teleportEnemy (bonus);
             points += 25;
+        }
+
+        if (boom.getX() < - boom.getFrameWidth()) {
+            teleportEnemy(boom);
+            points-=10;
+        }
+
+        if (boom.intersect(playerBird)) {
+            teleportEnemy(boom);
+            points-=20;
         }
 
         if(points>=30){
@@ -238,16 +272,19 @@ public class GameView extends View{
         enemyBird.setVx(-300-lvl*100);
         bonus.setVx(-300-lvl*100);
         playerBird.setVy(100+lvl*15);
+        boom.setVx(-300-lvl*100);
     }
 
     private void stopGame(){
         enemyBird.setVx(0);
         bonus.setVx(0);
+        boom.setVx(0);
         points=0;
         lvl=0;
-        playerBird.setVx(0);
+        playerBird.setVy(0);
         enemyBird.setX(viewHeight+10000);
         bonus.setX(viewHeight+10000);
+        boom.setX(viewHeight+10000);
         playerBird.setX(viewHeight+10000);
     }
 
@@ -255,6 +292,7 @@ public class GameView extends View{
         enemyBird.setVx(0);
         bonus.setVx(0);
         playerBird.setVy(0);
+        boom.setVx(0);
     }
 
 
